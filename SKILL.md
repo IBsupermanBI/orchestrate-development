@@ -1,19 +1,35 @@
 ---
 name: orchestrate-development-v3
-description: Execute a substantial development stage with a Luna Max root, exact Astra Low autonomous implementation workers, bounded Luna XHigh repair workers, optional Terra High read-only gates, internal Sol Medium review and Luna XHigh final validation. Experimental v3; use only when explicitly invoked and never replace v2 implicitly.
+description: Execute a substantial development stage with a Terra High root by default, temporary Luna Max root compatibility, exact Astra Low autonomous implementation workers, bounded Luna XHigh repair workers, optional Terra High read-only gates, internal Sol Medium review and Luna XHigh final validation. Experimental v3; use only when explicitly invoked and never replace v2 implicitly.
 ---
 
 # Orchestrate Development V3
 
 Deliver a correct, maintainable, accepted capability with proportionate model cost, elapsed time, coordination, testing, review, and rework. This is an experimental workflow independent of `orchestrate-development` v2 and the external loop-review skills.
 
+## Select the operation
+
+These are arguments to this skill, not separately installed slash commands. Explicit intent wins; `run` is the default for an authorized execution request.
+
+| Mode | Action | Load when needed |
+| --- | --- | --- |
+| `plan` | Produce the stage plan; do not implement or dispatch implementation workers | Context below; internal review only at a warranted boundary |
+| `run` | Execute the requested outcome; keep small work direct | Context for substantial stages; focused validation before implementation dispatch |
+| `resume` | Reconcile current state and continue pending work | [CONTEXT_AND_RESUME](references/CONTEXT_AND_RESUME.md) |
+| `diagnose` | Inspect package/profile drift without repairs | [DIAGNOSE](references/DIAGNOSE.md) |
+
+Advice about this workflow does not execute it. A bare invocation with no outcome asks for the intended task; do not scan unrelated projects or automatically start a stage. Before planning a substantial stage read [references/CONTEXT_AND_RESUME.md](references/CONTEXT_AND_RESUME.md). Load review, final-validation and Spark references only at their existing dispatch boundaries. Planning and diagnosis do not load implementation-only mechanics. Exact root/child model contracts below apply to plan/run/resume execution; standalone read-only diagnostics do not require spawning or rebinding a model.
+
 ## Bind the architecture
 
-The invoking root must be `gpt-5.6-luna` at `max`. Bind every child to an exact project profile. If the native tool cannot select a profile, read its bundled TOML and pass its exact model, effort and role instructions explicitly. Never inherit root settings implicitly. Scoring reviewers start without parent history (`fork_turns="none"` where supported). If exact native binding is unavailable, report the missing capability rather than substituting.
+The preferred invoking root is `gpt-5.6-terra` at `high`. `gpt-5.6-luna` at `max` remains a supported compatibility root during migration; use the root that actually invoked the skill and report which route ran. Do not spawn a replacement root or claim that a profile changed an already active main session. The bundled `terra-high-orchestrator` profile is an exact configuration layer for hosts that expose custom-agent startup and a reference for manual model/effort selection.
+
+Bind each child to the exact model, effort and role instructions below, using either a supported named agent profile or explicit native spawn arguments. A missing profile selector is not a missing model-binding capability. Before the first child dispatch read [references/RUNTIME_BINDING.md](references/RUNTIME_BINDING.md) and inspect the actual tool schema. Never inherit root model settings implicitly or substitute another model. Scoring reviewers start without parent history (`fork_turns="none"` where supported). Permission profiles govern tool access separately from model/role binding; preserve the user's current permission configuration.
 
 | Route | Profile | Exact model | Effort | Purpose |
 | --- | --- | --- | --- | --- |
-| `ROOT_ORCHESTRATOR` | root session | `gpt-5.6-luna` | `max` | semantic context, stage decomposition, ownership, integration, light acceptance |
+| `ROOT_ORCHESTRATOR` | `terra-high-orchestrator` or root selection | `gpt-5.6-terra` | `high` | preferred semantic context, stage decomposition, ownership, integration, light acceptance |
+| `LUNA_ROOT_COMPAT` | root selection | `gpt-5.6-luna` | `max` | temporarily supported root with the same ownership contract |
 | `ASTRA_WORKER` | `astra-low-worker` | `gpt-6-astra` | `low` | default substantial autonomous implementation |
 | `LUNA_WORKER` | `luna-xhigh-worker` | `gpt-5.6-luna` | `xhigh` | bounded repair, continuation, or economical background work |
 | `TERRA_GATE` | `terra-high-gate` | `gpt-5.6-terra` | `high`, read-only | one evidence or diagnostic gate requested by root |
@@ -51,15 +67,9 @@ Native topology is flat: root may create Astra, Luna, and Terra leaves/processes
 
 Root and every child must not load or invoke external review/orchestration workflows, including Loop Code Review and Loop Plan Review under any version or alias. Do not import their scoring loops, model routing, or acceptance rules. A separately requested standalone Loop Review is outside this workflow, never an internal delegation route. Project architecture, contracts, mandatory validation and publication permissions remain binding. Project-required review milestones use internal Sol review; project Loop Review invocation/cadence is replaced only by an explicit project/user exception. See the optional [project integration fragment](docs/AGENTS.integration.md). Task-relevant specialist skills remain available when they do not replace this workflow; governing higher-priority instructions still apply.
 
-## Use risk-weighted testing
+## Focus validation on risk
 
-Astra keeps a compact working plan at a detail level appropriate to the Goal, updates it when scope, dependencies, or approach materially change, and uses it through implementation and validation. Define a few outcome-level scenarios before implementation; reuse relevant existing tests. Two or three scenarios are a starting point for a bounded Goal, not a cap for a large stage. Do not write tests for every small function or mirror implementation details. Writing executable tests first is optional except where the risk makes it useful.
-
-Tests protect meaningful behavior and material regression risk; they do not maximize counts, coverage artifacts, or state matrices. The default evidence set for ordinary behavior is the primary success case plus a meaningful blocked/invalid case and a material recovery/error case when those risks exist. Add another test only for a distinct material failure mode not already covered.
-
-Implementation-first is normal for ordinary business logic, UI, integrations, internal refactoring, established repository patterns, and well-understood local behavior. Prefer test-first for reproducible regressions, security/permissions, concurrency/transactions, subtle state transitions, destructive/data-integrity behavior, or fragile public contracts. A deterministic regression test is normally sufficient for a bounded bug fix. Do not require ceremonial RED/GREEN/REFACTOR or broad suites after each edit.
-
-The worker owns focused validation: the smallest relevant combination of targeted tests, typecheck, lint/static checks, or runtime checks. Run stage validation once after stable integration and any scheduled review repair. Reserve release validation for release/MVP boundaries and assign every expensive validation to one owner.
+Before implementation dispatch, read [references/FOCUSED_VALIDATION.md](references/FOCUSED_VALIDATION.md). Workers own focused validation; root assigns expensive stage validation once after stable integration and scheduled repair. Preserve project-required checks.
 
 ## Normalize one worker return
 
@@ -68,6 +78,7 @@ Before returning, the worker performs one self-check: Goal alignment, unrelated-
 ```text
 EVIDENCE_CAPSULE
 Goal/result
+tested revision/diff marker + relevant input scope
 changed paths + anchors
 important implementation decisions
 focused validation + result
@@ -81,7 +92,7 @@ Normalize the return once. Durable root context is specification, stage plan, in
 
 ## Perform light acceptance
 
-Root checks the Goal contract, stable diff/evidence, capsule, focused validation, and scope deviations, then chooses exactly one result:
+Root checks the Goal contract, stable diff/evidence, capsule, focused validation, evidence freshness and scope deviations, then chooses exactly one result:
 
 - `ACCEPT` — the Goal is fit for integration.
 - `REPAIR` — return a bounded repair Goal to Astra or Luna according to the work.

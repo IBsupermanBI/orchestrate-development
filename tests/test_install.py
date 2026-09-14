@@ -49,6 +49,7 @@ class InstallTests(unittest.TestCase):
     def test_user_scope(self):
         INSTALL.install(ROOT, self.target, user=True, apply=True)
         self.assertTrue((self.target / 'skills/orchestrate-development-v3/SKILL.md').exists())
+        self.assertTrue((self.target / 'agents/terra-high-orchestrator.toml').exists())
         self.assertTrue((self.target / 'agents/astra-low-worker.toml').exists())
         self.assertFalse((self.target / 'hooks.json').exists())
 
@@ -59,6 +60,7 @@ class InstallTests(unittest.TestCase):
 
     def test_required_profiles_exact(self):
         expected = {
+            'terra-high-orchestrator': ('gpt-5.6-terra', 'high'),
             'astra-low-worker': ('gpt-6-astra', 'low'),
             'luna-xhigh-worker': ('gpt-5.6-luna', 'xhigh'),
             'terra-high-gate': ('gpt-5.6-terra', 'high'),
@@ -70,6 +72,12 @@ class InstallTests(unittest.TestCase):
         for asset in manifest['project_assets']:
             data = tomllib.loads((ROOT / asset['source']).read_text())
             actual[data['name']] = (data['model'], data['model_reasoning_effort'])
+            self.assertNotIn('sandbox_mode', data)
+            self.assertNotIn('sandbox_workspace_write', data)
+            if data['name'] in ('terra-high-gate', 'v3-sol-medium-reviewer'):
+                self.assertEqual(data['default_permissions'], ':read-only')
+            else:
+                self.assertNotIn('default_permissions', data)
         self.assertEqual(actual, expected)
 
 if __name__ == '__main__':

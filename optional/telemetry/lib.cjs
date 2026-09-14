@@ -19,6 +19,7 @@ function write(file, value) { fs.mkdirSync(path.dirname(file),{recursive:true});
 function root(cwd) { let p=path.resolve(cwd); for(;;) { if(fs.existsSync(path.join(p,'.git'))) return p; const up=path.dirname(p); if(up===p) return null; p=up; } }
 function ledgerPath(cwd, session) { return path.join(root(cwd)||path.resolve(cwd),'.scratch','orchestration-hooks','state-orchestrate-development-v3-'+String(session).replace(/[^A-Za-z0-9_.-]/g,'_')+'.json'); }
 const profiles = {
+ 'terra-high-orchestrator':['gpt-5.6-terra','high','ORCHESTRATION'],
  'astra-low-worker':['gpt-6-astra','low','IMPLEMENTATION'],
  'luna-xhigh-worker':['gpt-5.6-luna','xhigh','REPAIR'],
  'luna-xhigh-fixer':['gpt-5.6-luna','xhigh','REPAIR'],

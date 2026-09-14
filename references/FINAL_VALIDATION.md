@@ -8,4 +8,6 @@ Execute deterministic checks with scripts. Verify they actually ran on the inten
 
 Only test artifacts and explicitly permitted isolated runtime/fixture state may be written. Do not change product code, assertions, baselines or acceptance criteria to obtain a pass. Report failures and bounded diagnostic evidence to root. Root assigns repairs separately and requests affected retesting; repeat broad validation only if a repair invalidates broad evidence. Preserve failure evidence and justify retries for suspected transient infrastructure failures; a later pass does not silently erase flakiness.
 
+Check the input marker before and after execution; changed relevant inputs invalidate affected evidence. Include dirty and relevant untracked inputs, not HEAD alone.
+
 Return `PASS`, `FAIL` or `INCOMPLETE`, tested revision, environment, commands/results, per-criterion evidence, skips, artifacts, and residual uncertainty. Missing prerequisites, untested required journeys or invalidated inputs mean incomplete. Root makes final acceptance; a successful process exit is only one piece of evidence.
