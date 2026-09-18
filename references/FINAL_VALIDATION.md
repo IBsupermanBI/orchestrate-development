@@ -1,13 +1,5 @@
-# Final validation contract
+# Final validation
 
-Root dispatches `v3-luna-xhigh-validator` after stable integration and any scheduled review repairs. This leaf owns one stage/e2e validation pass; avoid duplicate expensive runs by root and workers.
+Root dispatches one Luna Validator after stable integration and scheduled review repair. The packet names stable inputs, acceptance criteria, required journeys, commands, environment assumptions and artifact locations. Validator confirms actual execution, skipped cases, integration assumptions and observable outcomes; UI, persistence and downstream effects are inspected when they matter.
 
-The packet includes stable revision/diff marker, acceptance criteria, required user journeys, commands, environment and service prerequisites, real versus mocked integration assumptions, permitted fixture changes and artifact directory. Root checks that the selected journeys represent the intended result. The validator flags missing coverage rather than assuming existing tests are sufficient.
-
-Execute deterministic checks with scripts. Verify they actually ran on the intended version, inspect skipped tests and relevant failures, and map observed results to acceptance criteria. For UI work inspect screenshots/traces or the running UI where visual or interaction requirements require it. Check persistence or downstream effects when those are part of the outcome; a success message alone is insufficient. Do not mechanically inspect every passing log or rerun broad suites after each small change.
-
-Only test artifacts and explicitly permitted isolated runtime/fixture state may be written. Do not change product code, assertions, baselines or acceptance criteria to obtain a pass. Report failures and bounded diagnostic evidence to root. Root assigns repairs separately and requests affected retesting; repeat broad validation only if a repair invalidates broad evidence. Preserve failure evidence and justify retries for suspected transient infrastructure failures; a later pass does not silently erase flakiness.
-
-Check the input marker before and after execution; changed relevant inputs invalidate affected evidence. Include dirty and relevant untracked inputs, not HEAD alone.
-
-Return `PASS`, `FAIL` or `INCOMPLETE`, tested revision, environment, commands/results, per-criterion evidence, skips, artifacts, and residual uncertainty. Missing prerequisites, untested required journeys or invalidated inputs mean incomplete. Root makes final acceptance; a successful process exit is only one piece of evidence.
+Validator returns `PASS`, `FAIL` or `INCOMPLETE` with per-criterion evidence and bounded diagnostic facts. It does not alter product code, tests, baselines or acceptance criteria, and it does not create Scout. Root assigns repairs separately and reruns only evidence invalidated by the repair. After final validation, Root dispatches Terra Gate for final stage/capability acceptance. Gate may use Scout only for bounded factual reconnaissance, does not implement or repair, and returns the final decision for Root to act on and report.

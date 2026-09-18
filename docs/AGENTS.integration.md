@@ -1,9 +1,9 @@
-# Фрагмент для AGENTS.md проекта
+# Optional project integration fragment
 
-Добавьте блок, если проект требует внешние Loop Review. Эквивалентное исключение дублировать не нужно.
+Add only when a project otherwise requires an external Loop Review for work explicitly run through V4:
 
-```markdown
-## Orchestration workflow exception
-
-When orchestrate-development-v3 is explicitly active, project requirements to invoke Loop Plan Review or Loop Code Review and their per-subtask cadence are replaced by the skill's internal review mechanism. The orchestrator must not invoke external Loop Review skills. Project-required review milestones remain required and are fulfilled by internal Sol review; required test commands, architecture, contracts, data safety and publication permissions remain binding. Outside this workflow, the project's normal Loop Review requirements apply. This exception does not override higher-priority instructions.
+```text
+For work explicitly invoked through Orchestrate Development, use its internal Sol independent review at the required review boundary instead of automatically invoking external Loop Review skills. Project-required architecture, contracts, validation, data safety and publication permissions remain binding. This exception does not override higher-priority instructions.
 ```
+
+Do not add this fragment when the project has no such external requirement.

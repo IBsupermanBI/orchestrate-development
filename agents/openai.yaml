@@ -1,7 +1,6 @@
 interface:
-  display_name: "Orchestrate Development V3"
-  short_description: "Terra High root with autonomous Astra Low workers"
-  default_prompt: "Use $orchestrate-development-v3 to execute this substantial stage with the preferred Terra High root, exact Astra Low implementation workers, bounded Luna XHigh repair, optional Terra High evidence gates, risk-weighted testing, and internal Sol Medium review and Luna XHigh final validation. Luna Max remains a supported compatibility root during migration."
-
+  display_name: "Orchestrate Development"
+  short_description: "Terra orchestration with optional Luna repository Scout"
+  default_prompt: "Use Orchestrate Development to execute this stage with Terra High orchestration, Astra implementation, optional bounded Luna Medium Scout reconnaissance, independent Sol review, Luna validation, and Terra acceptance."
 policy:
   allow_implicit_invocation: false

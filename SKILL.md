@@ -1,79 +1,87 @@
 ---
-name: orchestrate-development-v3
-description: Execute a substantial development stage with a Terra High root by default, temporary Luna Max root compatibility, exact Astra Low autonomous implementation workers, bounded Luna XHigh repair workers, optional Terra High read-only gates, internal Sol Medium review and Luna XHigh final validation. Experimental v3; use only when explicitly invoked and never replace v2 implicitly.
+name: orchestrate-development-v4
+description: Execute a substantial development stage with Terra High orchestration, Astra implementation, optional Luna Medium repository reconnaissance, independent Sol review, Luna validation, and Terra acceptance. Use only when explicitly invoked.
 ---
 
-# Orchestrate Development V3
+# Orchestrate Development V4
 
-Deliver a correct, maintainable, accepted capability with proportionate model cost, elapsed time, coordination, testing, review, and rework. This is an experimental workflow independent of `orchestrate-development` v2 and the external loop-review skills.
+Deliver an accepted capability with proportionate coordination, validation and rework. V4 is independent of earlier orchestration packages and external Loop Review skills. It preserves Review -> Validation -> Gate ownership while making bounded repository reconnaissance cheap and optional.
 
 ## Select the operation
 
-These are arguments to this skill, not separately installed slash commands. Explicit intent wins; `run` is the default for an authorized execution request.
+`run` is the default for an authorized execution request. `plan` produces a plan without implementation dispatch; `resume` reconciles current work before continuing; `diagnose` is read-only and loads [DIAGNOSE](references/DIAGNOSE.md). Advice about the workflow does not execute it. A bare invocation without an outcome asks for the outcome rather than scanning unrelated projects.
 
-| Mode | Action | Load when needed |
-| --- | --- | --- |
-| `plan` | Produce the stage plan; do not implement or dispatch implementation workers | Context below; internal review only at a warranted boundary |
-| `run` | Execute the requested outcome; keep small work direct | Context for substantial stages; focused validation before implementation dispatch |
-| `resume` | Reconcile current state and continue pending work | [CONTEXT_AND_RESUME](references/CONTEXT_AND_RESUME.md) |
-| `diagnose` | Inspect package/profile drift without repairs | [DIAGNOSE](references/DIAGNOSE.md) |
+For substantial work, read [CONTEXT_AND_RESUME](references/CONTEXT_AND_RESUME.md), retain a compact Plan + Goals + Progress model, and continue through inspect -> understand -> plan -> execute -> validate -> diagnose/replan -> report. Small local work may remain `Goal -> change -> validation -> done`.
 
-Advice about this workflow does not execute it. A bare invocation with no outcome asks for the intended task; do not scan unrelated projects or automatically start a stage. Before planning a substantial stage read [references/CONTEXT_AND_RESUME.md](references/CONTEXT_AND_RESUME.md). Load review, final-validation and Spark references only at their existing dispatch boundaries. Planning and diagnosis do not load implementation-only mechanics. Exact root/child model contracts below apply to plan/run/resume execution; standalone read-only diagnostics do not require spawning or rebinding a model.
+## Authority, autonomy, and scope
+
+Use this order when sources conflict: current user instruction; applicable project instructions; approved specifications/contracts/decisions; current code, schemas, tests and runtime behavior; active plan; maintained documentation; historical material and external references. Distinguish intended behavior from implementation truth and report material drift; never silently merge a real conflict.
+
+Investigate facts that can be obtained safely before asking the user. Escalate only a human-owned decision or authority boundary: materially different product choices, unavailable required input, irreversible action, publication, security-sensitive permission, or an external blocker. Preserve existing work, inspect the workspace/Git state before meaningful edits, and do not reset, stash, revert, commit, publish, or broaden scope without authority.
+
+Use progressive disclosure: project instructions -> exact search -> directly coupled code -> wider context only for a demonstrated gap. Fix the owning layer, inspect coupled producers/consumers when a contract changes, prefer the smallest coherent vertical outcome, and treat generated output as generated. Do not weaken security, privacy, validation, auditability, or rate limits to obtain a pass.
+
+Communicate with the user in the language they use unless they request otherwise; keep identifiers and machine-readable contracts in their established technical form. Lead reports with the outcome.
 
 ## Bind the architecture
 
-The preferred invoking root is `gpt-5.6-terra` at `high`. `gpt-5.6-luna` at `max` remains a supported compatibility root during migration; use the root that actually invoked the skill and report which route ran. Do not spawn a replacement root or claim that a profile changed an already active main session. The bundled `terra-high-orchestrator` profile is an exact configuration layer for hosts that expose custom-agent startup and a reference for manual model/effort selection.
-
-Bind each child to the exact model, effort and role instructions below, using either a supported named agent profile or explicit native spawn arguments. A missing profile selector is not a missing model-binding capability. Before the first child dispatch read [references/RUNTIME_BINDING.md](references/RUNTIME_BINDING.md) and inspect the actual tool schema. Never inherit root model settings implicitly or substitute another model. Scoring reviewers start without parent history (`fork_turns="none"` where supported). Permission profiles govern tool access separately from model/role binding; preserve the user's current permission configuration.
+The preferred root is `gpt-5.6-terra` at `high`. Bind a child through its exact named profile or explicit native model/effort arguments; never inherit root settings implicitly. Inspect the host spawn schema before the first dispatch. Role instructions define scope, while the host permission configuration remains separately binding.
 
 | Route | Profile | Exact model | Effort | Purpose |
 | --- | --- | --- | --- | --- |
-| `ROOT_ORCHESTRATOR` | `terra-high-orchestrator` or root selection | `gpt-5.6-terra` | `high` | preferred semantic context, stage decomposition, ownership, integration, light acceptance |
-| `LUNA_ROOT_COMPAT` | root selection | `gpt-5.6-luna` | `max` | temporarily supported root with the same ownership contract |
-| `ASTRA_WORKER` | `astra-low-worker` | `gpt-6-astra` | `low` | default substantial autonomous implementation |
-| `LUNA_WORKER` | `luna-xhigh-worker` | `gpt-5.6-luna` | `xhigh` | bounded repair, continuation, or economical background work |
-| `TERRA_GATE` | `terra-high-gate` | `gpt-5.6-terra` | `high`, read-only | one evidence or diagnostic gate requested by root |
-| `SOL_REVIEWER` | `v3-sol-medium-reviewer` | `gpt-5.6-sol` | `medium`, read-only | independent plan or code review at a selected stage/risk boundary |
-| `LUNA_VALIDATOR` | `v3-luna-xhigh-validator` | `gpt-5.6-luna` | `xhigh` | final stage/e2e execution and evidence analysis |
-| `SPARK_TOOL` | adapter, not a native agent | `gpt-5.3-codex-spark` | adapter-owned | qualifying deterministic operation |
+| `ROOT_ORCHESTRATOR` | `v4-terra-high-orchestrator` or root selection | `gpt-5.6-terra` | `high` | owns WHAT, decomposition, orchestration, integration and Goal-level acceptance |
+| `ASTRA_WORKER` | `v4-astra-low-worker` | `gpt-6-astra` | `low` | owns HOW and implementation for a bounded Goal |
+| `LUNA_SCOUT` | `v4-luna-medium-scout` | `gpt-5.6-luna` | `medium`, read-only | bounded repository research and semantic compression |
+| `LUNA_REPAIR` | `v4-luna-xhigh-repair` | `gpt-5.6-luna` | `xhigh` | bounded repair only |
+| `SOL_REVIEWER` | `v4-sol-medium-reviewer` | `gpt-5.6-sol` | `medium`, read-only | independent plan or code review |
+| `LUNA_VALIDATOR` | `v4-luna-xhigh-validator` | `gpt-5.6-luna` | `xhigh` | final stage/e2e validation and evidence analysis |
+| `TERRA_GATE` | `v4-terra-high-gate` | `gpt-5.6-terra` | `high`, read-only | final stage/capability acceptance and bounded consequential diagnostics |
 
-There is no Astra Medium route, effort escalation route, Sol implementation fallback, or Astra reviewer route; Sol supplies review evidence, while root owns acceptance. When Astra Low does not succeed, reassess the Goal, requirements, decomposition, or ownership before routing a bounded repair.
+There is no generic delegation route, reviewer implementation fallback, effort escalation route, or recursive research framework.
 
-## Plan only a substantial stage
+## Shallow topology and Scout admission
 
-For a substantial stage, root records the outcome, dependencies, coherent implementation streams, governing contracts and invariants, owned seams, acceptance, focused validation, stage validation, review boundary, and integration/release gate. Keep small work direct.
+The topology is shallow, not flat and not recursive:
 
-Root alone may dispatch `SOL_REVIEWER` for a plan review before implementation, when the stage plan is materially cross-cutting, ambiguous, architecture-heavy, dependency-heavy, risky, or expensive to correct. Worker micro-plans never receive plan review. Read [references/INTERNAL_REVIEW.md](references/INTERNAL_REVIEW.md) before dispatching internal review. Keep standalone Loop Review packages and profiles independent.
+```text
+Terra Root -> optional Scout, Astra, Repair, Reviewer, Validator, Gate
+Astra      -> optional Scout
+Terra Gate -> optional Scout
+```
 
-## Dispatch outcome-oriented Goals
+Only `ROOT_ORCHESTRATOR`, `ASTRA_WORKER`, and `TERRA_GATE` may create `LUNA_SCOUT`. Root owns every top-level orchestration dispatch. Astra and Terra Gate may each dispatch only their own bounded Scout child. Repair, Reviewer, Validator and Scout may not create Scout or any other subagent. One writer owns an overlapping seam.
 
-Send Astra the observable outcome, owned writable seam, governing specification pointers, architecture/contracts/invariants, acceptance criteria, focused validation expectations, and consequential stop conditions. Do not send this skill, the root transcript, old worker history, a mandatory implementation algorithm, mandatory TDD choreography, an internal review loop, or a request to create subagents.
+A repository map is **sufficiently narrow** when a worker knows the primary implementation seam, governing requirement/contract, main execution or data path, and likely validation surface well enough to proceed through targeted direct inspection without repository-wide reconnaissance. It need not list every related file.
 
-Root specifies **what** and the hard boundaries; Astra owns **how**. The worker inspects directly coupled code, forms and maintains a compact working plan, identifies outcome-level validation scenarios, implements and refactors, chooses focused tests, repairs local errors, inspects its diff once, and returns one compact `EVIDENCE_CAPSULE`.
+Scout is optional. Root should give Astra a sufficiently narrow map when it can do so cheaply. Astra should request Scout when the supplied Goal lacks one and mapping seams, flows, tests, dependencies or existing patterns would materially consume its working context. Do not dispatch Scout ceremonially when Root already supplied a fresh narrow map and directly coupled code is clear. Repeat reconnaissance only after a materially changed, distinct, stale, contradicted or incomplete question.
 
-Ordinary implementation ambiguity is worker-owned. Return to root only when uncertainty can materially change product intent, architecture, a public contract, security/privacy, persistence/data semantics, irreversible behavior, or ownership/scope.
+## Scout contract
 
-## Bind and execute in one turn
+Scout maps terrain; it does not design the solution. Its read-only scope answers: where the implementation is, what connects to what, what already exists, which evidence supports it, what remains uncertain, and what its parent should read directly. It may inspect repository structure, code, contracts, tests, current documentation and authoritative upstream documentation when allowed.
 
-Every delegated Goal uses `BIND_AND_EXECUTE`: create or bind the Goal, form a compact micro-plan, and execute in the same turn. Never spend a separate model round acknowledging `GOAL_BOUND`, waiting for `EXECUTE`, or normalizing lifecycle status. Do not poll on a timer.
+Scout must not edit files; choose product semantics or architecture; broaden scope; implement, repair, review, validate, accept, gate, or create subagents. At an architectural or product boundary, return factual alternatives and uncertainty to the parent. Scout output is evidence, not authority.
 
-Use `LEAF` for one bounded outcome. Use `PROCESS` for sequential Goals only while seam, model/profile, owner, and useful code/domain context remain the same; exactly one Goal may be active. Retire the process when the seam or owner changes, the next Goal is not ready, independence is needed, or retained context becomes noisy. Do not impose a numeric Goal quota.
+Return one compact result, never raw search dumps or reasoning traces:
 
-Native topology is flat: root may create Astra, Luna, and Terra leaves/processes, plus root-dispatched Sol review and Luna validation leaves. Workers create no native subagents, gates, plan reviews, or code reviews. A worker that needs separate evidence returns a compact `GATE_REQUEST`; root decides whether to dispatch Terra.
+```text
+RESEARCH_CAPSULE
+question / requested map
+observed revision or inspected scope
+relevant paths + symbols
+execution or data flow
+existing tests / repository patterns
+verified facts / constraints
+material uncertainty
+recommended direct reads
+```
 
-`MAX_ACTIVE_CHILD_TASKS` is a ceiling, never a target. Parallelize only independent seams or read-only work on stable inputs. Keep one writer per overlapping boundary.
+Compress the capsule into parent Goal pointers; do not forward exploratory transcripts. Astra must directly inspect the code it changes and governing, critical, persistence, security and data-integrity interfaces before consequential edits. A Scout capsule is navigation, not implementation authority. Gate may use Scout only for a bounded factual question and still owns the gate decision.
 
-## Preserve workflow ownership
+## Plan and execute Goals
 
-Root and every child must not load or invoke external review/orchestration workflows, including Loop Code Review and Loop Plan Review under any version or alias. Do not import their scoring loops, model routing, or acceptance rules. A separately requested standalone Loop Review is outside this workflow, never an internal delegation route. Project architecture, contracts, mandatory validation and publication permissions remain binding. Project-required review milestones use internal Sol review; project Loop Review invocation/cadence is replaced only by an explicit project/user exception. See the optional [project integration fragment](docs/AGENTS.integration.md). Task-relevant specialist skills remain available when they do not replace this workflow; governing higher-priority instructions still apply.
+For a substantial stage, Root tracks desired outcome, current and completed Goals, remaining Goals, acceptance criteria, primary observable success signal, blockers, and validation state. Root normally sends outcome-oriented Goal packets: observable outcome, owned scope, governing pointers, known paths/symbols, material constraints, acceptance, expected validation, and any narrow map. Do not forward the entire root transcript or dictate a mechanical implementation algorithm.
 
-## Focus validation on risk
-
-Before implementation dispatch, read [references/FOCUSED_VALIDATION.md](references/FOCUSED_VALIDATION.md). Workers own focused validation; root assigns expensive stage validation once after stable integration and scheduled repair. Preserve project-required checks.
-
-## Normalize one worker return
-
-Before returning, the worker performs one self-check: Goal alignment, unrelated-change check, acceptance coverage, focused validation, deviations, and material uncertainty. This is not an independent code review and has no score or repeated review rounds.
+Astra binds and executes in one turn: inspect directly coupled code, maintain only the plan detail it needs, implement, run focused validation, repair local errors, inspect its diff once, and return a compact capsule. Ordinary implementation ambiguity is worker-owned; consequential intent, public-contract, security/privacy, persistence/data, irreversible, ownership or scope ambiguity returns to Root. Read [FOCUSED_VALIDATION](references/FOCUSED_VALIDATION.md) before substantial implementation.
 
 ```text
 EVIDENCE_CAPSULE
@@ -84,43 +92,21 @@ important implementation decisions
 focused validation + result
 deviations
 material uncertainty/risks
-runtime metrics when exposed
 optional GATE_REQUEST
 ```
 
-Normalize the return once. Durable root context is specification, stage plan, invariants, owner decisions, repository state, stable diffs, tests, a compact ledger, and evidence capsules—not raw logs, transcripts, old statuses, receipts, or closed findings.
+If diagnosis or ownership is unclear, reproduce or trace first. When repeated patches do not move the primary signal, stop, reassess evidence, inspect the owning path, and replan instead of continuing a blind repair loop.
 
-## Perform light acceptance
+## Review, validation, and acceptance
 
-Root checks the Goal contract, stable diff/evidence, capsule, focused validation, evidence freshness and scope deviations, then chooses exactly one result:
+Root performs light acceptance of Goal alignment, stable diff, focused evidence, freshness and deviations: `ACCEPT`, `REPAIR`, `DECISION_REQUIRED`, or `REVIEW_REQUIRED`. Review is risk- or milestone-based, not automatic per task. Root alone dispatches a fresh Sol reviewer at an appropriate stable boundary; see [INTERNAL_REVIEW](references/INTERNAL_REVIEW.md). Reviewer reads its assigned surface directly and never delegates.
 
-- `ACCEPT` — the Goal is fit for integration.
-- `REPAIR` — return a bounded repair Goal to Astra or Luna according to the work.
-- `DECISION_REQUIRED` — a consequential owner/root decision is missing.
-- `REVIEW_REQUIRED` — independent review is warranted by the stage risk.
+After stable integration and any scheduled review repair, Root dispatches one Luna Validator for final stage/e2e validation, then dispatches Terra Gate for final acceptance; see [FINAL_VALIDATION](references/FINAL_VALIDATION.md). Validator does not repair code or tests and never delegates. Gate owns the final stage/capability decision, may use Scout only for bounded factual reconnaissance needed for that decision, and does not implement or repair. Validation proceeds from targeted checks to relevant integration checks to broader checks proportionate to risk. A process, HTTP 200, or clean exit alone is not proof. Missing meaningful evidence is explicit `INCOMPLETE`, never success.
 
-Completion does not create a reviewer automatically. Independent review is stage-, risk-, or milestone-based. Root may dispatch `SOL_REVIEWER` for code review against a stable integrated diff for auth/security/privacy/payments, migrations or destructive data, concurrency/distributed state, material public contracts, risky multi-writer integration, material uncertainty, unexpected scope, repeated validation failure, or when root cannot confidently accept. Treat review as the default before an important release/MVP milestone unless the user chooses another assurance level.
+`done` is an accepted outcome, not a worker message: requested behavior and its primary success signal are confirmed; required checks pass; material recovery states and contracts are handled; unrelated work remains preserved; and remaining risks are explicit. Local failure triggers diagnosis, repair or replanning rather than abandonment. Root acts on the Gate result and reports the accepted outcome.
 
-For a reviewed stage use: implementation → focused validation → stable integration → independent review → bounded repair → affected focused retest → heavy stage validation → acceptance. Repeat independent review only when repair materially changes the reviewed behavior, contract, architecture, or risk boundary. Without review, use implementation → focused validation → integration → stage validation → acceptance.
-
-## Final stage and end-to-end validation
-
-After stable integration and scheduled review repairs, root dispatches one `LUNA_VALIDATOR` leaf as the owner of final stage validation. Read [references/FINAL_VALIDATION.md](references/FINAL_VALIDATION.md) before dispatch. Supply the stable revision/diff marker, acceptance criteria, required scenarios, commands, environment and integration assumptions, and artifact locations. Run existing deterministic suites through scripts; the validator checks actual execution, skips, environment fidelity, results, and relevant logs/traces/screenshots rather than merely reporting exit codes. Root owns acceptance.
-
-The validator does not repair product code or weaken tests. Failures return evidence and a bounded diagnosis to root; root dispatches repair to Luna or Astra, then reruns affected validation. Repeat the full suite only when changes invalidate broad evidence. Never rerun until green without explaining the failure. Terra remains optional for one concrete unresolved question, never a mandatory second overview.
-
-## Detect stagnation by evidence
-
-Long reasoning is not itself failure. Require a new useful signal: implementation artifact, meaningful diagnostic evidence, exact blocker/root-cause anchor, or validation result. After two meaningful checkpoints without new evidence, request one compact status/stop capsule and then reroute or reframe; do not create repeated STOP/status loops.
-
-## Use optional runtime assets
-
-Read [references/SPARK_ADAPTER.md](references/SPARK_ADAPTER.md) before the first `SPARK_TOOL` use. The adapter remains a tool under root/worker supervision, never a planner, reviewer, process, or acceptance authority.
-
-Project profiles are shipped under `assets/project/.codex/agents/`. Install them with the bundled `install.py`. Global telemetry, if present, observes exposed host events without requiring agent messages, ledger writes, or orchestration hooks. It is not a package dependency. The project orchestration guard is disabled. Root maintains its compact working record itself; do not call the old hook ledger or require hook acceptance/archival transitions. Profiles and workflow decisions belong to this skill, not telemetry.
-
-Tag persisted runtime telemetry, when the host exposes it, with `workflow=orchestrate-development-v3`, `orchestration_version=3`, route, `stage_id`, `goal_id`, lifetime, and `interaction_class`. Do not dump telemetry to the user.
+Specialized skills may help when their trigger applies, but cannot override user authority, project instructions, security, acceptance criteria, or this role ownership. Keep this orchestration generic: do not impose a project-specific backlog, deployment, framework, plan format, or commit policy.
 
 ## Finish compactly
 
-Report the accepted capability, focused/stage validation, models and routes actually used, and remaining material risk. Runtime values are reported only when exposed; never estimate them. Success is the accepted result at assurance proportionate to actual risk—not agent count, test count, coverage, review rounds, or occupied concurrency.
+Report the accepted outcome, primary validation signal, checks actually run, routes actually used, and material residual risk. Do not estimate unavailable runtime values or narrate files mechanically. Package diagnostics are read-only: `python <skill-base>/scripts/orchestration_doctor.py diagnose --project <project>`.
