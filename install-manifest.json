@@ -1,38 +1,42 @@
 {
   "schema_version": 1,
-  "skill_name": "orchestrate-development-v4",
+  "skill_name": "orchestrate-development-v5",
   "project_assets": [
     {
-      "source": "assets/project/.codex/agents/v4-terra-high-orchestrator.toml",
-      "destination": ".codex/agents/v4-terra-high-orchestrator.toml"
+      "source": "assets/project/.codex/agents/v5-sol-medium-orchestrator.toml",
+      "destination": ".codex/agents/v5-sol-medium-orchestrator.toml"
     },
     {
-      "source": "assets/project/.codex/agents/v4-astra-low-worker.toml",
-      "destination": ".codex/agents/v4-astra-low-worker.toml"
+      "source": "assets/project/.codex/agents/v5-sol-medium-worker.toml",
+      "destination": ".codex/agents/v5-sol-medium-worker.toml"
     },
     {
-      "source": "assets/project/.codex/agents/v4-luna-medium-scout.toml",
-      "destination": ".codex/agents/v4-luna-medium-scout.toml"
+      "source": "assets/project/.codex/agents/v5-astra-low-worker.toml",
+      "destination": ".codex/agents/v5-astra-low-worker.toml"
     },
     {
-      "source": "assets/project/.codex/agents/v4-luna-xhigh-repair.toml",
-      "destination": ".codex/agents/v4-luna-xhigh-repair.toml"
+      "source": "assets/project/.codex/agents/v5-luna-medium-scout.toml",
+      "destination": ".codex/agents/v5-luna-medium-scout.toml"
     },
     {
-      "source": "assets/project/.codex/agents/v4-sol-medium-reviewer.toml",
-      "destination": ".codex/agents/v4-sol-medium-reviewer.toml"
+      "source": "assets/project/.codex/agents/v5-luna-xhigh-repair.toml",
+      "destination": ".codex/agents/v5-luna-xhigh-repair.toml"
     },
     {
-      "source": "assets/project/.codex/agents/v4-luna-xhigh-validator.toml",
-      "destination": ".codex/agents/v4-luna-xhigh-validator.toml"
+      "source": "assets/project/.codex/agents/v5-sol-medium-reviewer.toml",
+      "destination": ".codex/agents/v5-sol-medium-reviewer.toml"
     },
     {
-      "source": "assets/project/.codex/agents/v4-terra-high-gate.toml",
-      "destination": ".codex/agents/v4-terra-high-gate.toml"
+      "source": "assets/project/.codex/agents/v5-luna-xhigh-validator.toml",
+      "destination": ".codex/agents/v5-luna-xhigh-validator.toml"
+    },
+    {
+      "source": "assets/project/.codex/agents/v5-sol-high-gate.toml",
+      "destination": ".codex/agents/v5-sol-high-gate.toml"
     }
   ],
   "hook_asset": null,
-  "notes": "Self-contained V4 skill and profiles. Hooks and telemetry are not dependencies.",
+  "notes": "Self-contained V5 skill and profiles. Hooks and telemetry are not dependencies.",
   "skill_files": [
     "CHANGELOG.md",
     "LICENSE",
@@ -40,13 +44,14 @@
     "SKILL.md",
     "USER_GUIDE.md",
     "agents/openai.yaml",
-    "assets/project/.codex/agents/v4-astra-low-worker.toml",
-    "assets/project/.codex/agents/v4-luna-medium-scout.toml",
-    "assets/project/.codex/agents/v4-luna-xhigh-repair.toml",
-    "assets/project/.codex/agents/v4-luna-xhigh-validator.toml",
-    "assets/project/.codex/agents/v4-sol-medium-reviewer.toml",
-    "assets/project/.codex/agents/v4-terra-high-gate.toml",
-    "assets/project/.codex/agents/v4-terra-high-orchestrator.toml",
+    "assets/project/.codex/agents/v5-astra-low-worker.toml",
+    "assets/project/.codex/agents/v5-luna-medium-scout.toml",
+    "assets/project/.codex/agents/v5-luna-xhigh-repair.toml",
+    "assets/project/.codex/agents/v5-luna-xhigh-validator.toml",
+    "assets/project/.codex/agents/v5-sol-high-gate.toml",
+    "assets/project/.codex/agents/v5-sol-medium-orchestrator.toml",
+    "assets/project/.codex/agents/v5-sol-medium-reviewer.toml",
+    "assets/project/.codex/agents/v5-sol-medium-worker.toml",
     "docs/AGENTS.integration.md",
     "install-manifest.json",
     "references/CONTEXT_AND_RESUME.md",

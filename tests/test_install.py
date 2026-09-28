@@ -1,6 +1,9 @@
 import importlib.util
 import json
 from pathlib import Path
+import shutil
+import subprocess
+import sys
 import tempfile
 import tomllib
 import unittest
@@ -16,8 +19,8 @@ def load(name, path):
     return module
 
 
-INSTALL = load("v4_install", ROOT / "install.py")
-UPGRADE = load("v4_upgrade", ROOT / "scripts" / "upgrade_from_v3.py")
+INSTALL = load("v5_install", ROOT / "install.py")
+UPGRADE = load("v5_upgrade", ROOT / "scripts" / "upgrade_from_v3.py")
 
 
 class InstallTests(unittest.TestCase):
@@ -41,7 +44,7 @@ class InstallTests(unittest.TestCase):
 
     def test_conflict_is_backed_up_only_when_forced(self):
         INSTALL.install(ROOT, self.target, apply=True)
-        destination = self.target / ".agents/skills/orchestrate-development-v4/SKILL.md"
+        destination = self.target / ".agents/skills/orchestrate-development-v5/SKILL.md"
         destination.write_text("local edit")
         with self.assertRaises(ValueError):
             INSTALL.install(ROOT, self.target, apply=True)
@@ -66,7 +69,7 @@ class InstallTests(unittest.TestCase):
         self.assertTrue(legacy_skill.exists())
         applied = UPGRADE.upgrade(self.target, apply=True)
         self.assertEqual(applied["migration"], "applied")
-        self.assertTrue((self.target / ".agents/skills/orchestrate-development-v4/SKILL.md").exists())
+        self.assertTrue((self.target / ".agents/skills/orchestrate-development-v5/SKILL.md").exists())
         self.assertFalse(legacy_skill.exists())
         self.assertFalse(old_profile.exists())
         archive = Path(applied["archive_root"])
@@ -80,8 +83,8 @@ class InstallTests(unittest.TestCase):
         legacy.mkdir(parents=True)
         (legacy / "SKILL.md").write_text("legacy")
         result = UPGRADE.upgrade(self.target, user=True, apply=True)
-        self.assertTrue((self.target / "skills/orchestrate-development-v4/SKILL.md").is_file())
-        self.assertTrue((self.target / "agents/v4-luna-medium-scout.toml").is_file())
+        self.assertTrue((self.target / "skills/orchestrate-development-v5/SKILL.md").is_file())
+        self.assertTrue((self.target / "agents/v5-luna-medium-scout.toml").is_file())
         self.assertFalse(legacy.exists())
         self.assertTrue((Path(result["archive_root"]) / "orchestrate-development-v3/SKILL.md").is_file())
 
@@ -95,13 +98,14 @@ class InstallTests(unittest.TestCase):
 
     def test_required_profiles_match_contract(self):
         expected = {
-            "v4-terra-high-orchestrator": ("gpt-5.6-terra", "high", False),
-            "v4-astra-low-worker": ("gpt-6-astra", "low", False),
-            "v4-luna-medium-scout": ("gpt-5.6-luna", "medium", True),
-            "v4-luna-xhigh-repair": ("gpt-5.6-luna", "xhigh", False),
-            "v4-sol-medium-reviewer": ("gpt-5.6-sol", "medium", True),
-            "v4-luna-xhigh-validator": ("gpt-5.6-luna", "xhigh", False),
-            "v4-terra-high-gate": ("gpt-5.6-terra", "high", True),
+            "v5-sol-medium-orchestrator": ("gpt-6-sol", "medium", False),
+            "v5-sol-medium-worker": ("gpt-6-sol", "medium", False),
+            "v5-astra-low-worker": ("gpt-6-astra", "low", False),
+            "v5-luna-medium-scout": ("gpt-6-luna", "medium", True),
+            "v5-luna-xhigh-repair": ("gpt-6-luna", "xhigh", False),
+            "v5-sol-medium-reviewer": ("gpt-6-sol", "medium", True),
+            "v5-luna-xhigh-validator": ("gpt-6-luna", "xhigh", False),
+            "v5-sol-high-gate": ("gpt-6-sol", "high", True),
         }
         actual = {}
         manifest = json.loads((ROOT / "install-manifest.json").read_text())
@@ -109,6 +113,55 @@ class InstallTests(unittest.TestCase):
             profile = tomllib.loads((ROOT / asset["source"]).read_text())
             actual[profile["name"]] = (profile["model"], profile["model_reasoning_effort"], profile.get("default_permissions") == ":read-only")
         self.assertEqual(actual, expected)
+
+    def test_v5_preserves_existing_versions_in_both_scopes(self):
+        for user in (False, True):
+            target = self.target / str(user)
+            skills = target / ("skills" if user else ".agents/skills")
+            agents = target / ("agents" if user else ".codex/agents")
+            preserved = []
+            for version in (2, 4):
+                path = skills / f"orchestrate-development-v{version}/SKILL.md"
+                path.parent.mkdir(parents=True)
+                path.write_text(f"local v{version}")
+                preserved.append(path)
+            agents.mkdir(parents=True)
+            profile = agents / "v4-terra-high-orchestrator.toml"
+            profile.write_text("local profile")
+            preserved.append(profile)
+            before = {path: path.read_bytes() for path in preserved}
+            INSTALL.install(ROOT, target, user=user, apply=True)
+            self.assertEqual(before, {path: path.read_bytes() for path in preserved})
+            self.assertTrue((skills / "orchestrate-development-v5/SKILL.md").is_file())
+
+    def test_manifest_escape_rejected_before_any_write(self):
+        package = Path(self.tmp.name) / "unsafe-package"
+        package.mkdir()
+        manifest = json.loads((ROOT / "install-manifest.json").read_text())
+        manifest["skill_files"] = ["../outside.md"]
+        (package / "install-manifest.json").write_text(json.dumps(manifest))
+        with self.assertRaises(ValueError):
+            INSTALL.install(package, self.target, apply=True)
+        self.assertFalse(self.target.exists())
+        with self.assertRaises(ValueError):
+            INSTALL.inside(self.target, str(Path(self.tmp.name).resolve() / "outside.md"))
+
+    def test_public_package_runs_without_sibling_dependencies(self):
+        package = Path(self.tmp.name) / "standalone"
+        manifest = json.loads((ROOT / "install-manifest.json").read_text())
+        for name in set(manifest["skill_files"] + ["install.py"]):
+            destination = package / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / name, destination)
+        for arguments in (
+            ["scripts/validate_package.py"],
+            ["install.py", "--project", str(self.target)],
+            ["install.py", "--project", str(self.target), "--apply"],
+            ["scripts/orchestration_doctor.py", "diagnose", "--project", str(self.target)],
+        ):
+            result = subprocess.run([sys.executable, *arguments], cwd=package, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(json.loads(result.stdout)["findings"], [])
 
 
 if __name__ == "__main__":

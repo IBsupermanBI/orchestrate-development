@@ -1,6 +1,6 @@
 interface:
   display_name: "Orchestrate Development"
-  short_description: "Terra orchestration with optional Luna repository Scout"
-  default_prompt: "Use Orchestrate Development to execute this stage with Terra High orchestration, Astra implementation, optional bounded Luna Medium Scout reconnaissance, independent Sol review, Luna validation, and Terra acceptance."
+  short_description: "GPT-6 Sol orchestration with selective Astra implementation"
+  default_prompt: "Use $orchestrate-development-v5 to deliver this stage with Sol Medium orchestration, bounded Sol or Astra implementation, independent review, Luna validation and Sol High acceptance."
 policy:
   allow_implicit_invocation: false

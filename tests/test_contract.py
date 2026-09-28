@@ -15,11 +15,11 @@ class ContractTests(unittest.TestCase):
 
     def test_scout_permissions_and_leaf_invariant_are_explicit(self):
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("Only `ROOT_ORCHESTRATOR`, `ASTRA_WORKER`, and `TERRA_GATE` may create `LUNA_SCOUT`", skill)
-        scout = (ROOT / "assets/project/.codex/agents/v4-luna-medium-scout.toml").read_text(encoding="utf-8")
+        self.assertIn("Only `ROOT_ORCHESTRATOR`, `SOL_WORKER`, `ASTRA_WORKER`, and `SOL_GATE` may create `LUNA_SCOUT`", skill)
+        scout = (ROOT / "assets/project/.codex/agents/v5-luna-medium-scout.toml").read_text(encoding="utf-8")
         self.assertIn('default_permissions = ":read-only"', scout)
         self.assertIn("Do not edit files", scout)
-        for name in ("v4-luna-xhigh-repair.toml", "v4-sol-medium-reviewer.toml", "v4-luna-xhigh-validator.toml"):
+        for name in ("v5-luna-xhigh-repair.toml", "v5-sol-medium-reviewer.toml", "v5-luna-xhigh-validator.toml"):
             self.assertIn("Do not create Scout", (ROOT / "assets/project/.codex/agents" / name).read_text(encoding="utf-8"))
 
     def test_final_gate_ownership_is_distinct_from_goal_acceptance(self):
@@ -29,7 +29,7 @@ class ContractTests(unittest.TestCase):
         self.assertIn("Root owns every top-level orchestration dispatch", skill)
         self.assertNotIn("Root owns the final" + " gate", skill)
         self.assertNotIn("never accepts" + " for Root", skill)
-        gate = (ROOT / "assets/project/.codex/agents/v4-terra-high-gate.toml").read_text(encoding="utf-8")
+        gate = (ROOT / "assets/project/.codex/agents/v5-sol-high-gate.toml").read_text(encoding="utf-8")
         self.assertIn('default_permissions = ":read-only"', gate)
         self.assertIn("Own the final stage/capability acceptance decision", gate)
         self.assertIn("Do not implement or repair", gate)

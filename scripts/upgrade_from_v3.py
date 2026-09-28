@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Safely install V4 and archive known V3 assets after an explicit opt-in."""
+"""Safely install V5 and archive known V3 assets after an explicit opt-in."""
 from __future__ import annotations
 
 import argparse
@@ -18,7 +18,7 @@ V3_PROFILES = (
 
 
 def load_installer():
-    spec = importlib.util.spec_from_file_location("v4_installer", PACKAGE / "install.py")
+    spec = importlib.util.spec_from_file_location("v5_installer", PACKAGE / "install.py")
     module = importlib.util.module_from_spec(spec)
     assert spec and spec.loader
     spec.loader.exec_module(module)

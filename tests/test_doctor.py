@@ -23,7 +23,7 @@ class DoctorTests(unittest.TestCase):
         before = {str(path): path.read_bytes() for path in self.project.rglob("*") if path.is_file()}
         self.assertEqual(DOCTOR.diagnose(ROOT, self.project)["findings"], [])
         self.assertEqual(before, {str(path): path.read_bytes() for path in self.project.rglob("*") if path.is_file()})
-        profile = self.project / ".codex/agents/v4-luna-medium-scout.toml"
+        profile = self.project / ".codex/agents/v5-luna-medium-scout.toml"
         profile.write_text(profile.read_text().replace('model_reasoning_effort = "medium"', 'model_reasoning_effort = "high"'))
         self.assertIn("profile-drift", [item["id"] for item in DOCTOR.diagnose(ROOT, self.project)["findings"]])
 
